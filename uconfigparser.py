@@ -22,10 +22,10 @@ class ConfigParser:
         else:
             return False
 
-    def add_option(self, section, option):
+    def add_option(self, section, option, value=None):
         """Create a new option in the configuration."""
         if self.has_section(section) and not option in self.config_dict[section]:
-            self.config_dict[section][option] = None
+            self.config_dict[section][option] = value
         else:
             raise
 
@@ -101,16 +101,17 @@ class ConfigParser:
         for section in self.config_dict.keys():
             fp.write('[%s]\n' % section)
             for option in self.config_dict[section].keys():
-                fp.write('\n%s =' % option)
+                fp.write('%s =' % option)
                 values = self.config_dict[section][option]
                 if type(values) == type([]):
                     fp.write('\n    ')
                     values = '\n    '.join(values)
                 else:
                     fp.write(' ')
-                fp.write(values)
+                fp.write(str(values))
                 fp.write('\n')
             fp.write('\n')
+        fp.close()
 
 
     def remove_option(self, section, option):
